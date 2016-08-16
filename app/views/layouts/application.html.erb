@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Events</title>
+    <script src="/assets/bootstrap.min.js"></script>
+    <link href="/assets/bootstrap.min.css" media="all" rel="stylesheet" />
+    <link href="/assets/bootstrap-theme.min.css" media="all" rel="stylesheet" />
+
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+</head>
+<body>
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <div class="row text-right">
+            <%= yield :header %>
+            <% if current_user %>
+                | <a href="/session" data-method="DELETE">Logout</a>
+            <% end %>
+        </div>
+
+        <!-- Flash messages -->
+        <% if flash[:errors] %>
+            <div class="row alert alert-danger"">
+                <% flash[:errors].each do |e| %>
+                    <p><%= e %></p>
+                <% end %>
+            </div>
+        <% end %>
+        
+        <%= yield :main %>
+    </div>
+</body>
+</html>

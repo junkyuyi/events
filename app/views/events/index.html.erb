@@ -1,0 +1,90 @@
+<% content_for :header do %>
+	<a href="/users/<%= @user.id %>/edit">Edit my Profile</a>
+<% end %>
+
+<% content_for :main do %>
+	<h2>Welcome <%= @user.first_name %></h2>
+
+	<p>Here are some of the events at your state</p>
+	<table class="table stable-striped">
+		<thead class="thead-inverse">
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Location</th>
+				<th>Host</th>
+				<th>Action/Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @state_events.each do |event| %>
+				<tr>
+					<td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+					<td><%= event.date %></td>
+					<td><%= event.city %></td>
+					<td><%= event.user.first_name %></td>
+					<td>
+						<% if event.user_id == session[:user_id] %>
+							<a href="/events/<%= event.id%>" data-method="DELETE">Delete</a>
+						<% elsif event.users_joined.include?(@user) %>
+							Joining | <a href="/joins/<%= event.id%>" data-method="DELETE">Cancel</a>
+						<% else %>
+							<a href="/joins/<%= event.id%>" data-method="POST">Join</a>
+						<% end %>
+					</td>
+				</tr>
+			<%end%>
+		</tbody>
+	</table>
+
+	<p>Here are some of the events on other stats</p>
+	<table class="table table-striped">
+		<thead class="thead-inverse">
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Location</th>
+				<th>State</th>
+				<th>Host</th>
+				<th>Action/Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @outter_events.each do |event| %>
+				<tr>
+					<td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+					<td><%= event.date %></td>
+					<td><%= event.city %></td>
+					<td><%= event.state %></td>
+					<td><%= event.user.first_name %></td>
+					<td>
+						<% if event.user_id == session[:user_id] %>
+							<a href="/events/<%= event.id%>" data-method="DELETE">Delete</a>
+						<% elsif event.users_joined.include?(@user) %>
+							Joining | <a href="/joins/<%= event.id%>" data-method="DELETE">Cancel</a>
+						<% else %>
+							<a href="/joins/<%= event.id%>" data-method="POST">Join</a>
+						<% end %>
+					</td>
+				</tr>
+			<%end%>
+		</tbody>
+	</table>
+
+<h2>Add Event</h2>
+<form action="/events" method="POST">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<label>Name:</label>
+	<input type="text" name="event[name]"><br>
+	<label>Date:</label>
+	<input type="date" name="event[date]"><br>
+	<label>Location:</label>
+	<input type="text" name="event[city]">
+	<select name="event[state]">
+		<% get_states.each do |state| %>
+			<option><%= state %></option>
+		<% end %>
+	</select><br>
+	<input type="submit" value="Add Event">
+</form>
+<% end %>

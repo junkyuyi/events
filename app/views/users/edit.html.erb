@@ -1,0 +1,28 @@
+<% content_for :header do %>
+	<a href="/events">Event Dashboard</a>
+<% end %>
+<% content_for :main do %>
+	<h1>Edit Your Profile</h1>
+	<form action="/users/<%= session[:user_id] %>" method="POST">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		<label>First Name:</label>
+		<input type="text" name="user[first_name]" value="<%= @user.first_name%>"><br>
+		<label>Last Name:</label>
+		<input type="text" name="user[last_name]" value="<%= @user.last_name%>"><br>
+		<label>Email:</label>
+		<input type="text" name="user[email]" value="<%= @user.email%>"><br>
+		<label>Location:</label>
+		<input type="text" name="user[city]" value="<%= @user.city%>">
+		<select name="user[state]">
+			<% get_states.each do |state| %>
+				<% if state == @user.state %>
+					<option selected="selected"><%= state %></option>
+				<% else %>
+					<option><%= state %></option>
+				<% end %>
+			<% end %>
+		</select>
+		<br>
+		<input type="submit" value="Update Records">
+	</form>
+<% end %>
